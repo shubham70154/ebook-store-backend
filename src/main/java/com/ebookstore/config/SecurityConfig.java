@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only APIs
                         .requestMatchers("/api/cart/**").hasRole("CUSTOMER") // Cart-only APIs
                         .requestMatchers("/api/orders/**").hasRole("CUSTOMER") // Order-only APIs
+                        .requestMatchers("/api/payments/**").hasRole("CUSTOMER")  // Payments-only APIs
                         .anyRequest().authenticated()     // All remaining endpoints require authentication
                 )
                 .httpBasic(Customizer.withDefaults())
