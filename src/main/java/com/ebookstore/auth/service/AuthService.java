@@ -7,4 +7,6 @@ public interface AuthService {
 
     UserResponseDto register(RegisterRequestDto request);
 
+    UserResponseDto getCurrentUser(String username);
+
 }

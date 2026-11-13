@@ -31,37 +31,24 @@ public class SecurityConfig {
 
         http
                 .userDetailsService(userDetailsService)
-
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .headers(headers ->
                         headers.frameOptions(frame ->
                                 frame.sameOrigin()
                         )
                 )
-
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
-
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/register",
-                                "/h2-console/**"
-                        ).permitAll()
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/books/**"
-                        ).permitAll()
-
+                        .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
                         .anyRequest().authenticated()
                 )
-
                 .httpBasic(Customizer.withDefaults())
-
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();

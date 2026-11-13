@@ -78,4 +78,18 @@ public class AuthServiceImpl implements AuthService {
                 .roles(new HashSet<>(Set.of(customerRole)))
                 .build();
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponseDto getCurrentUser(String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found")
+                );
+
+        return userMapper.toResponseDto(user);
+    }
+
 }
