@@ -11,9 +11,12 @@ import com.ebookstore.user.entity.User;
 import com.ebookstore.user.mapper.UserMapper;
 import com.ebookstore.user.repository.RoleRepository;
 import com.ebookstore.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,17 +25,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
+    @Transactional
     public UserResponseDto register(RegisterRequestDto request) {
 
         validateDuplicateUser(request);
+
         Role customerRole = roleRepository
                 .findByName(RoleName.CUSTOMER)
                 .orElseThrow(() ->
@@ -40,25 +43,16 @@ public class AuthServiceImpl implements AuthService {
                                 "CUSTOMER role is not configured"
                         )
                 );
+
         User user = buildCustomer(request, customerRole);
 
         User savedUser = userRepository.save(user);
 
         return userMapper.toResponseDto(savedUser);
-
-    }
-
-    private User buildCustomer(RegisterRequestDto request, Role customerRole) {
-        return User.builder()
-                .username(request.getUsername().trim())
-                .email(request.getEmail().trim().toLowerCase())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .enabled(true)
-                .roles(new HashSet<>(Set.of(customerRole)))
-                .build();
     }
 
     private void validateDuplicateUser(RegisterRequestDto request) {
+
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new ConflictException(
                     "Username is already registered"
@@ -70,5 +64,18 @@ public class AuthServiceImpl implements AuthService {
                     "Email is already registered"
             );
         }
+    }
+
+    private User buildCustomer(
+            RegisterRequestDto request,
+            Role customerRole) {
+
+        return User.builder()
+                .username(request.getUsername().trim())
+                .email(request.getEmail().trim().toLowerCase())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .enabled(true)
+                .roles(new HashSet<>(Set.of(customerRole)))
+                .build();
     }
 }

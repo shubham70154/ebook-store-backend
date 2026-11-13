@@ -30,7 +30,7 @@ public class User {
 
     @Builder.Default
     @Column(nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)

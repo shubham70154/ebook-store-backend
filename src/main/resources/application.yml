@@ -33,3 +33,9 @@ level:
 root: INFO
 com.ebookstore: DEBUG
 org.hibernate.SQL: DEBUG
+
+app:
+  bootstrap-admin:
+    username: ${ADMIN_USERNAME:}
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
