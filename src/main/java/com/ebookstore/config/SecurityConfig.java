@@ -47,8 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
-                        .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")     // Admin-only APIs
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only APIs
+                        .requestMatchers("/api/cart/**").hasRole("CUSTOMER") // Cart-only APIs
+                        .requestMatchers("/api/orders/**").hasRole("CUSTOMER") // Order-only APIs
                         .anyRequest().authenticated()     // All remaining endpoints require authentication
                 )
                 .httpBasic(Customizer.withDefaults())
