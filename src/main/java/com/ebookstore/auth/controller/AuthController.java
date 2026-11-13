@@ -34,8 +34,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> getCurrentUser(Authentication authentication) {
 
-        UserResponseDto response =
-                authService.getCurrentUser(authentication.getName());
+        UserResponseDto response = authService.getCurrentUser(authentication.getName());
 
         return ResponseEntity.ok(response);
     }
