@@ -12,9 +12,12 @@ public record BookResponseDto(
         String author,
         String description,
         BigDecimal price,
+        Integer totalQuantity,
+        Integer availableQuantity,
         String category,
         String coverImageUrl,
         boolean active,
+
         LocalDateTime createdAt
 ) {
 }

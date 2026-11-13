@@ -1,6 +1,7 @@
 package com.ebookstore.book.service.impl;
 
 import com.ebookstore.book.dto.request.BookRequestDto;
+import com.ebookstore.book.dto.request.CreateBookRequestDto;
 import com.ebookstore.book.dto.response.BookResponseDto;
 import com.ebookstore.book.entity.Book;
 import com.ebookstore.book.mapper.BookMapper;
@@ -60,13 +61,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookResponseDto createBook(BookRequestDto request) {
+    public BookResponseDto createBook(CreateBookRequestDto request) {
 
         Book book = Book.builder()
                 .title(request.getTitle().trim())
                 .author(request.getAuthor().trim())
                 .description(request.getDescription())
                 .price(request.getPrice())
+                .totalQuantity(request.getTotalQuantity())
+                .availableQuantity(request.getTotalQuantity())
                 .category(request.getCategory().trim())
                 .coverImageUrl(request.getCoverImageUrl())
                 .active(true)

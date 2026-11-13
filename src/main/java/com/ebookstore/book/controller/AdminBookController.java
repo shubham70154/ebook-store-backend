@@ -1,6 +1,7 @@
 package com.ebookstore.book.controller;
 
 import com.ebookstore.book.dto.request.BookRequestDto;
+import com.ebookstore.book.dto.request.CreateBookRequestDto;
 import com.ebookstore.book.dto.response.BookResponseDto;
 import com.ebookstore.book.service.BookService;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ public class AdminBookController {
 
     @PostMapping
     public ResponseEntity<BookResponseDto> createBook(
-            @Valid @RequestBody BookRequestDto request) {
+            @Valid @RequestBody CreateBookRequestDto request) {
 
         BookResponseDto response = bookService.createBook(request);
 

@@ -42,16 +42,12 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS
                         )
                 )
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
-//                        .anyRequest().authenticated()
-//                )
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
+                        .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")     // Admin-only APIs
                         .anyRequest().authenticated()     // All remaining endpoints require authentication
                 )

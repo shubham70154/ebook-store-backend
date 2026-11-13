@@ -45,14 +45,15 @@ WHERE u.username = 'admin'
 
 -- Insert sample books
 INSERT INTO books (
-    title, author, description, price, category,
-    cover_image_url, active, created_at, updated_at
+    title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
 )
 SELECT
     'Effective Java',
     'Joshua Bloch',
     'Best practices for Java programming.',
     650.00,
+    10,
+    10,
     'Programming',
     NULL,
     TRUE,
@@ -65,14 +66,15 @@ SELECT
 );
 
 INSERT INTO books (
-    title, author, description, price, category,
-    cover_image_url, active, created_at, updated_at
+    title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
 )
 SELECT
     'Clean Code',
     'Robert C. Martin',
     'A handbook of agile software craftsmanship.',
     550.00,
+    15,
+    15,
     'Programming',
     NULL,
     TRUE,
@@ -85,14 +87,15 @@ SELECT
 );
 
 INSERT INTO books (
-    title, author, description, price, category,
-    cover_image_url, active, created_at, updated_at
+    title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
 )
 SELECT
     'Spring in Action',
     'Craig Walls',
     'Learn Spring framework and Spring Boot.',
     720.00,
+    20,
+    20,
     'Programming',
     NULL,
     TRUE,

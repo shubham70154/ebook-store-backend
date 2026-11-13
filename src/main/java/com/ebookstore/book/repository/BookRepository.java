@@ -1,7 +1,9 @@
 package com.ebookstore.book.repository;
 
 import com.ebookstore.book.entity.Book;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,4 +27,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             ORDER BY b.createdAt DESC
             """)
     List<Book> searchActiveBooks(@Param("keyword") String keyword);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT b FROM Book b WHERE b.id = :id")
+    Optional<Book> findByIdForUpdate(@Param("id") Long id);
 }

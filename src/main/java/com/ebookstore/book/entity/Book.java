@@ -1,5 +1,6 @@
 package com.ebookstore.book.entity;
 
+import com.ebookstore.exception.ConflictException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,12 @@ public class Book {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private Integer totalQuantity;
+
+    @Column(nullable = false)
+    private Integer availableQuantity;
+
     @Column(nullable = false, length = 100)
     private String category;
 
@@ -47,8 +54,9 @@ public class Book {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
     }
 
     @PreUpdate
@@ -56,6 +64,74 @@ public class Book {
         updatedAt = LocalDateTime.now();
     }
 
+    // Checks whether the requested quantity is available.
+    public boolean hasAvailableQuantity(int quantity) {
+        return quantity > 0
+                && availableQuantity != null
+                && availableQuantity >= quantity;
+    }
+
+    // Reserves book quantity during checkout.
+    public void reserveQuantity(int quantity) {
+
+        if (!hasAvailableQuantity(quantity)) {
+            throw new ConflictException(
+                    "Insufficient quantity available for book: " + title
+            );
+        }
+
+        availableQuantity -= quantity;
+    }
+
+    // Releases reserved quantity if payment fails or an order expires.
+    public void releaseQuantity(int quantity) {
+
+        if (quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "Quantity to release must be greater than zero"
+            );
+        }
+
+        if (totalQuantity == null
+                || availableQuantity == null
+                || availableQuantity + quantity > totalQuantity) {
+
+            throw new ConflictException(
+                    "Released quantity exceeds total book quantity"
+            );
+        }
+
+        availableQuantity += quantity;
+    }
+
+    // Updates total inventory while preserving existing reservations.
+    public void updateTotalQuantity(int newTotalQuantity) {
+
+        if (newTotalQuantity < 0) {
+            throw new IllegalArgumentException(
+                    "Total quantity cannot be negative"
+            );
+        }
+
+        if (totalQuantity == null || availableQuantity == null) {
+            throw new IllegalStateException(
+                    "Book inventory has not been initialized"
+            );
+        }
+
+        int reservedQuantity = totalQuantity - availableQuantity;
+
+        if (newTotalQuantity < reservedQuantity) {
+            throw new ConflictException(
+                    "Total quantity cannot be less than currently reserved quantity"
+            );
+        }
+
+        this.totalQuantity = newTotalQuantity;
+        this.availableQuantity = newTotalQuantity - reservedQuantity;
+    }
+
+    // Updates book details without changing inventory.
     public void updateDetails(
             String title,
             String author,
@@ -72,6 +148,7 @@ public class Book {
         this.coverImageUrl = coverImageUrl;
     }
 
+    // Soft delete: book remains in the database but is no longer active.
     public void deactivate() {
         this.active = false;
     }
