@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Mapper(componentModel = "spring")
 public interface CartMapper {
 
+    // CartItem mapping
     @Mapping(target = "bookId", source = "book.id")
     @Mapping(target = "title", source = "book.title")
     @Mapping(target = "author", source = "book.author")
@@ -22,9 +23,14 @@ public interface CartMapper {
             target = "lineTotal",
             expression = "java(item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))"
     )
-    @Mapping(target = "available", expression = "java(item.getBook().isActive())")
+    @Mapping(
+            target = "available",
+            expression = "java(item.getBook().isActive())"
+    )
     CartItemResponseDto toItemResponseDto(CartItem item);
 
+    // Cart mapping
+    @Mapping(target = "cartId", source = "id")
     @Mapping(target = "items", source = "items")
     @Mapping(
             target = "totalQuantity",

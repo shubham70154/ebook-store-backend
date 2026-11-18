@@ -7,13 +7,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootTest
 class EbookStoreBackendApplicationTests {
 
+
     @Test
     void contextLoads() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         String encodedPassword = encoder.encode("Admin@123");
 
-        System.out.println("password________________+_____ " + encodedPassword);
+        System.out.println("password: - " + encodedPassword);
     }
 
 }
