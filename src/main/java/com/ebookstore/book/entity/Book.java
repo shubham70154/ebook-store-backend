@@ -52,6 +52,29 @@ public class Book {
 
     private LocalDateTime updatedAt;
 
+    // object creation responsibility: Factory method to create a new Book instance with initial available quantity equal to total quantity.
+    public static Book create(
+            String title,
+            String author,
+            String description,
+            BigDecimal price,
+            Integer totalQuantity,
+            String category,
+            String coverImageUrl
+    ) {
+        return Book.builder()
+                .title(title)
+                .author(author)
+                .description(description)
+                .price(price)
+                .totalQuantity(totalQuantity)
+                .availableQuantity(totalQuantity)
+                .category(category)
+                .coverImageUrl(coverImageUrl)
+                .active(true)
+                .build();
+    }
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
@@ -76,7 +99,7 @@ public class Book {
 
         if (!hasAvailableQuantity(quantity)) {
             throw new ConflictException(
-                    "Insufficient quantity available for book: " + title
+                    String.format("Insufficient quantity available for book: %s", title)
             );
         }
 
@@ -97,7 +120,7 @@ public class Book {
                 || availableQuantity + quantity > totalQuantity) {
 
             throw new ConflictException(
-                    "Released quantity exceeds total book quantity"
+                    String.format("Released quantity exceeds total book quantity for book: %s", title)
             );
         }
 

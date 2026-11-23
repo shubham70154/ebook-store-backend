@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Active book not found with id: " + id
+                                String.format("Book not found with id: %s", id)
                         )
                 );
 
@@ -63,17 +63,15 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookResponseDto createBook(CreateBookRequestDto request) {
 
-        Book book = Book.builder()
-                .title(request.getTitle().trim())
-                .author(request.getAuthor().trim())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .totalQuantity(request.getTotalQuantity())
-                .availableQuantity(request.getTotalQuantity())
-                .category(request.getCategory().trim())
-                .coverImageUrl(request.getCoverImageUrl())
-                .active(true)
-                .build();
+        Book book = Book.create(
+                request.getTitle(),
+                request.getAuthor(),
+                request.getDescription(),
+                request.getPrice(),
+                request.getTotalQuantity(),
+                request.getCategory(),
+                request.getCoverImageUrl()
+        );
 
         Book savedBook = bookRepository.save(book);
 
@@ -87,7 +85,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Book not found with id: " + id
+                                String.format("Book not found with id: %s", id)
                         )
                 );
 
@@ -110,7 +108,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Book not found with id: " + id
+                                String.format("Book not found with id: %s", id)
                         )
                 );
 

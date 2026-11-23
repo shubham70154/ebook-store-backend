@@ -44,6 +44,26 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // object creation responsibility: create a customer user
+    public static User createCustomer(
+            String username,
+            String email,
+            String encodedPassword,
+            Role customerRole
+    ) {
+        if (customerRole == null) {
+            throw new IllegalArgumentException("Customer role cannot be null");
+        }
+
+        return User.builder()
+                .username(username.trim())
+                .email(email.trim().toLowerCase())
+                .password(encodedPassword)
+                .enabled(true)
+                .roles(new HashSet<>(Set.of(customerRole)))
+                .build();
+    }
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {

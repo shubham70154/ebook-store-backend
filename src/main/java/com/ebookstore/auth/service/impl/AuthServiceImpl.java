@@ -18,9 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -44,7 +41,17 @@ public class AuthServiceImpl implements AuthService {
                         )
                 );
 
-        User user = buildCustomer(request, customerRole);
+        // Encode password in the service.
+        String encodedPassword =
+                passwordEncoder.encode(request.getPassword());
+
+        // Create the customer through the entity factory method.
+        User user = User.createCustomer(
+                request.getUsername(),
+                request.getEmail(),
+                encodedPassword,
+                customerRole
+        );
 
         User savedUser = userRepository.save(user);
 
@@ -53,32 +60,21 @@ public class AuthServiceImpl implements AuthService {
 
     private void validateDuplicateUser(RegisterRequestDto request) {
 
-        if (userRepository.existsByUsername(request.getUsername())) {
+        String username = request.getUsername().trim();
+        String email = request.getEmail().trim().toLowerCase();
+
+        if (userRepository.existsByUsername(username)) {
             throw new ConflictException(
                     "Username is already registered"
             );
         }
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(email)) {
             throw new ConflictException(
                     "Email is already registered"
             );
         }
     }
-
-    private User buildCustomer(
-            RegisterRequestDto request,
-            Role customerRole) {
-
-        return User.builder()
-                .username(request.getUsername().trim())
-                .email(request.getEmail().trim().toLowerCase())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .enabled(true)
-                .roles(new HashSet<>(Set.of(customerRole)))
-                .build();
-    }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -86,10 +82,11 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found")
+                        new ResourceNotFoundException(
+                                String.format("User not found with username: %s", username)
+                        )
                 );
 
         return userMapper.toResponseDto(user);
     }
-
 }
