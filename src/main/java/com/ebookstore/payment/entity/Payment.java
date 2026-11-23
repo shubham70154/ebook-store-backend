@@ -1,6 +1,7 @@
 package com.ebookstore.payment.entity;
 
 import com.ebookstore.order.entity.Order;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(
@@ -39,8 +39,9 @@ public class Payment {
     @Column(nullable = false, length = 20)
     private PaymentStatus status;
 
-    @Column(nullable = false, length = 50)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private PaymentMethod paymentMethod;
 
     @Column(nullable = false, unique = true, length = 100)
     private String transactionReference;
@@ -49,16 +50,17 @@ public class Payment {
 
     public static Payment create(
             Order order,
-            PaymentStatus status) {
-
+            PaymentStatus status,
+            PaymentMethod paymentMethod,
+            String transactionReference
+    ) {
         Payment payment = new Payment();
 
         payment.order = order;
         payment.amount = order.getTotalAmount();
         payment.status = status;
-        payment.paymentMethod = "DUMMY";
-        payment.transactionReference =
-                "DUMMY-" + UUID.randomUUID();
+        payment.paymentMethod = paymentMethod;
+        payment.transactionReference = transactionReference;
 
         return payment;
     }

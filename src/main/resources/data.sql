@@ -48,7 +48,7 @@ INSERT INTO books (
     title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
 )
 SELECT
-    'Effective Java',
+    'Java Fundamentals',
     'Joshua Bloch',
     'Best practices for Java programming.',
     650.00,
@@ -61,7 +61,7 @@ SELECT
     CURRENT_TIMESTAMP
     WHERE NOT EXISTS (
     SELECT 1 FROM books
-    WHERE title = 'Effective Java'
+    WHERE title = 'Java Fundamentals'
       AND author = 'Joshua Bloch'
 );
 
@@ -69,7 +69,7 @@ INSERT INTO books (
     title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
 )
 SELECT
-    'Clean Code',
+    'Spring Boot in Action',
     'Robert C. Martin',
     'A handbook of agile software craftsmanship.',
     550.00,
@@ -82,7 +82,7 @@ SELECT
     CURRENT_TIMESTAMP
     WHERE NOT EXISTS (
     SELECT 1 FROM books
-    WHERE title = 'Clean Code'
+    WHERE title = 'Spring Boot in Action'
       AND author = 'Robert C. Martin'
 );
 
@@ -104,5 +104,26 @@ SELECT
     WHERE NOT EXISTS (
     SELECT 1 FROM books
     WHERE title = 'Spring in Action'
+      AND author = 'Craig Walls'
+);
+
+INSERT INTO books (
+    title, author, description, price, total_quantity, available_quantity, category, cover_image_url, active, created_at, updated_at
+)
+SELECT
+    'React Js for Beginners',
+    'Craig Walls',
+    'Learn React Js framework and Spring Boot.',
+    720.00,
+    5,
+    5,
+    'Programming',
+    NULL,
+    TRUE,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+    WHERE NOT EXISTS (
+    SELECT 1 FROM books
+    WHERE title = 'React Js for Beginners'
       AND author = 'Craig Walls'
 );

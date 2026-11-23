@@ -1,5 +1,6 @@
 package com.ebookstore.payment.dto;
 
+import com.ebookstore.payment.entity.PaymentMethod;
 import com.ebookstore.payment.entity.PaymentStatus;
 
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ public record PaymentResponseDto(
         Long orderId,
         BigDecimal amount,
         PaymentStatus status,
-        String paymentMethod,
+        PaymentMethod paymentMethod,
         String transactionReference,
         LocalDateTime createdAt
 ) {
