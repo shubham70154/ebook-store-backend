@@ -17,7 +17,7 @@ public record PaymentProcessingResult(
         return new PaymentProcessingResult(
                 PaymentStatus.SUCCESS,
                 paymentMethod,
-                "DEMO-" + UUID.randomUUID()
+                String.format("DEMO-%s", UUID.randomUUID())
         );
     }
 }

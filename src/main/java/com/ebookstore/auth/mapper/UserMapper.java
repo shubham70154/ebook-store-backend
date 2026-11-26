@@ -1,8 +1,8 @@
-package com.ebookstore.user.mapper;
+package com.ebookstore.auth.mapper;
 
 import com.ebookstore.auth.dto.response.UserResponseDto;
-import com.ebookstore.user.entity.Role;
-import com.ebookstore.user.entity.User;
+import com.ebookstore.auth.entity.Role;
+import com.ebookstore.auth.entity.User;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

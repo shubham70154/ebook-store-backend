@@ -1,5 +1,7 @@
 package com.ebookstore.order.service.impl;
 
+import com.ebookstore.auth.entity.User;
+import com.ebookstore.auth.repository.UserRepository;
 import com.ebookstore.book.entity.Book;
 import com.ebookstore.book.repository.BookRepository;
 import com.ebookstore.cart.entity.Cart;
@@ -12,8 +14,6 @@ import com.ebookstore.order.entity.Order;
 import com.ebookstore.order.mapper.OrderMapper;
 import com.ebookstore.order.repository.OrderRepository;
 import com.ebookstore.order.service.OrderService;
-import com.ebookstore.user.entity.User;
-import com.ebookstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,12 +92,12 @@ public class OrderServiceImpl implements OrderService {
             Book book = bookRepository.findByIdForUpdate(bookId)
                     .orElseThrow(() ->
                             new ResourceNotFoundException(
-                                    "Book not found: " + bookId
+                                    String.format("Book not found: %d", bookId)
                             ));
 
             if (!book.isActive()) {
                 throw new ConflictException(
-                        "Book is no longer available: " + book.getTitle()
+                        String.format("Book is no longer available: %s", book.getTitle())
                 );
             }
 
@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
                 )
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Order not found: " + orderId
+                                String.format("Order not found: %d", orderId)
                         ));
 
         return orderMapper.toResponseDto(order);

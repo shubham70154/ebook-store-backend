@@ -1,4 +1,4 @@
-package com.ebookstore.user.entity;
+package com.ebookstore.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

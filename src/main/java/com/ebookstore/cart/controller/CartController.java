@@ -18,8 +18,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping
-    public ResponseEntity<CartResponseDto> getCart(
-            Authentication authentication) {
+    public ResponseEntity<CartResponseDto> getCart(Authentication authentication) {
 
         return ResponseEntity.ok(
                 cartService.getCart(authentication.getName())
@@ -27,9 +26,7 @@ public class CartController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<CartResponseDto> addItem(
-            Authentication authentication,
-            @Valid @RequestBody AddCartItemRequestDto request) {
+    public ResponseEntity<CartResponseDto> addItem(Authentication authentication, @Valid @RequestBody AddCartItemRequestDto request) {
 
         return ResponseEntity.ok(
                 cartService.addItem(authentication.getName(), request)
@@ -37,24 +34,15 @@ public class CartController {
     }
 
     @PutMapping("/items/{itemId}")
-    public ResponseEntity<CartResponseDto> updateItemQuantity(
-            Authentication authentication,
-            @PathVariable Long itemId,
-            @Valid @RequestBody UpdateCartItemRequestDto request) {
+    public ResponseEntity<CartResponseDto> updateItemQuantity(Authentication authentication, @PathVariable Long itemId, @Valid @RequestBody UpdateCartItemRequestDto request) {
 
         return ResponseEntity.ok(
-                cartService.updateItemQuantity(
-                        authentication.getName(),
-                        itemId,
-                        request
-                )
+                cartService.updateItemQuantity(authentication.getName(), itemId, request)
         );
     }
 
     @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Void> removeItem(
-            Authentication authentication,
-            @PathVariable Long itemId) {
+    public ResponseEntity<Void> removeItem(Authentication authentication, @PathVariable Long itemId) {
 
         cartService.removeItem(authentication.getName(), itemId);
 
@@ -62,8 +50,7 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> clearCart(
-            Authentication authentication) {
+    public ResponseEntity<Void> clearCart(Authentication authentication) {
 
         cartService.clearCart(authentication.getName());
 

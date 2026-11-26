@@ -1,7 +1,7 @@
-package com.ebookstore.user.repository;
+package com.ebookstore.auth.repository;
 
-import com.ebookstore.user.entity.Role;
-import com.ebookstore.user.entity.RoleName;
+import com.ebookstore.auth.entity.Role;
+import com.ebookstore.auth.entity.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.ebookstore.user.entity;
+package com.ebookstore.auth.entity;
 
 public enum RoleName {
     CUSTOMER,

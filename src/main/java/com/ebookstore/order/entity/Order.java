@@ -1,7 +1,7 @@
 package com.ebookstore.order.entity;
 
+import com.ebookstore.auth.entity.User;
 import com.ebookstore.exception.ConflictException;
-import com.ebookstore.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -132,7 +132,7 @@ public class Order {
     private void validatePendingPayment() {
         if (status != OrderStatus.PENDING_PAYMENT) {
             throw new ConflictException(
-                    "Order cannot be updated because its status is " + status
+                    String.format("Order cannot be updated because its status is %s", status)
             );
         }
     }

@@ -1,7 +1,7 @@
 package com.ebookstore.cart.entity;
 
+import com.ebookstore.auth.entity.User;
 import com.ebookstore.book.entity.Book;
-import com.ebookstore.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

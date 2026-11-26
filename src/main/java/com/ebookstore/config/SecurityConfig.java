@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only APIs
                         .requestMatchers("/api/cart/**").hasRole("CUSTOMER") // Cart-only APIs

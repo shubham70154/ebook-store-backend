@@ -25,7 +25,7 @@ public interface CartMapper {
     )
     @Mapping(
             target = "available",
-            expression = "java(item.getBook().isActive())"
+            expression = "java(item.getBook().isActive() && item.getBook().getAvailableQuantity() >= item.getQuantity())"
     )
     CartItemResponseDto toItemResponseDto(CartItem item);
 

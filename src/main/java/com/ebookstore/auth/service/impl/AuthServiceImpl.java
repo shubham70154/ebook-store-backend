@@ -2,18 +2,16 @@ package com.ebookstore.auth.service.impl;
 
 import com.ebookstore.auth.dto.request.RegisterRequestDto;
 import com.ebookstore.auth.dto.response.UserResponseDto;
+import com.ebookstore.auth.entity.Role;
+import com.ebookstore.auth.entity.RoleName;
+import com.ebookstore.auth.entity.User;
+import com.ebookstore.auth.mapper.UserMapper;
+import com.ebookstore.auth.repository.RoleRepository;
+import com.ebookstore.auth.repository.UserRepository;
 import com.ebookstore.auth.service.AuthService;
 import com.ebookstore.exception.ConflictException;
 import com.ebookstore.exception.ResourceNotFoundException;
-import com.ebookstore.user.entity.Role;
-import com.ebookstore.user.entity.RoleName;
-import com.ebookstore.user.entity.User;
-import com.ebookstore.user.mapper.UserMapper;
-import com.ebookstore.user.repository.RoleRepository;
-import com.ebookstore.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

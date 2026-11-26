@@ -1,7 +1,7 @@
 package com.ebookstore.security;
 
-import com.ebookstore.user.entity.User;
-import com.ebookstore.user.repository.UserRepository;
+import com.ebookstore.auth.entity.User;
+import com.ebookstore.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
-                                "User not found: " + username
+                                String.format("User not found: %s", username)
                         )
                 );
 
         var authorities = user.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(
-                        "ROLE_" + role.getName().name()
+                        String.format("ROLE_%s", role.getName().name())
                 ))
                 .toList();
 

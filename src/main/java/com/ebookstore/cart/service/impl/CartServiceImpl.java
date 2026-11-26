@@ -1,5 +1,7 @@
 package com.ebookstore.cart.service.impl;
 
+import com.ebookstore.auth.entity.User;
+import com.ebookstore.auth.repository.UserRepository;
 import com.ebookstore.book.entity.Book;
 import com.ebookstore.book.repository.BookRepository;
 import com.ebookstore.cart.dto.request.AddCartItemRequestDto;
@@ -10,11 +12,9 @@ import com.ebookstore.cart.entity.CartItem;
 import com.ebookstore.cart.mapper.CartMapper;
 import com.ebookstore.cart.repository.CartRepository;
 import com.ebookstore.cart.service.CartService;
-import com.ebookstore.exception.ConflictException;
-import com.ebookstore.exception.ResourceNotFoundException;
-import com.ebookstore.user.entity.User;
-import com.ebookstore.user.repository.UserRepository;
+import com.ebookstore.exception.CartProcessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,21 +38,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public CartResponseDto addItem(
-            String username,
-            AddCartItemRequestDto request) {
+    public CartResponseDto addItem(String username, AddCartItemRequestDto request) {
 
         Cart cart = getOrCreateCart(username);
 
         Book book = bookRepository.findById(request.getBookId())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Book not found with id: " + request.getBookId()
+                        new CartProcessException(
+                                String.format("Book not found with id: %d", request.getBookId())
                         )
                 );
 
         if (!book.isActive()) {
-            throw new ConflictException(
+            throw new CartProcessException(
                     "This book is currently unavailable"
             );
         }
@@ -74,13 +72,13 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cart.getItem(itemId);
 
         if (cartItem == null) {
-            throw new ResourceNotFoundException(
-                    "Cart item not found with id: " + itemId
+            throw new CartProcessException(
+                    String.format("Cart item not found with id: %d", itemId)
             );
         }
 
         if (!cartItem.getBook().isActive()) {
-            throw new ConflictException(
+            throw new CartProcessException(
                     "This book is currently unavailable"
             );
         }
@@ -100,8 +98,8 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cart.getItem(itemId);
 
         if (cartItem == null) {
-            throw new ResourceNotFoundException(
-                    "Cart item not found with id: " + itemId
+            throw new CartProcessException(
+                    String.format("Cart item not found with id: %d", itemId)
             );
         }
 
@@ -121,8 +119,8 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "User not found: " + username
+                        new UsernameNotFoundException(
+                                String.format("User not found: %s", username)
                         )
                 );
 

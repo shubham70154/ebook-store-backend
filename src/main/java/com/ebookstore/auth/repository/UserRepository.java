@@ -1,6 +1,6 @@
-package com.ebookstore.user.repository;
+package com.ebookstore.auth.repository;
 
-import com.ebookstore.user.entity.User;
+import com.ebookstore.auth.entity.User;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

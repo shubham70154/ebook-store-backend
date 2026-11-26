@@ -1,5 +1,9 @@
 package com.ebookstore.payment.service.impl;
 
+import com.ebookstore.auth.entity.User;
+import com.ebookstore.auth.repository.UserRepository;
+import com.ebookstore.book.entity.Book;
+import com.ebookstore.book.repository.BookRepository;
 import com.ebookstore.exception.PaymentProcessException;
 import com.ebookstore.exception.UnsupportedPaymentException;
 import com.ebookstore.order.entity.Order;
@@ -8,12 +12,11 @@ import com.ebookstore.order.repository.OrderRepository;
 import com.ebookstore.payment.dto.PaymentResponseDto;
 import com.ebookstore.payment.entity.Payment;
 import com.ebookstore.payment.entity.PaymentMethod;
+import com.ebookstore.payment.entity.PaymentStatus;
 import com.ebookstore.payment.repository.PaymentRepository;
 import com.ebookstore.payment.service.PaymentService;
 import com.ebookstore.payment.service.strategy.PaymentProcessingResult;
 import com.ebookstore.payment.service.strategy.PaymentStrategy;
-import com.ebookstore.user.entity.User;
-import com.ebookstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final BookRepository bookRepository;
     private final List<PaymentStrategy> paymentStrategies;
 
     @Override
@@ -54,6 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
                                 String.format("Order not found: %d", orderId)
                         )
                 );
+
 
         // 3. Return existing payment if already processed.
         var existingPayment = paymentRepository.findByOrder_Id(orderId);
@@ -87,17 +92,33 @@ public class PaymentServiceImpl implements PaymentService {
                 .findFirst()
                 .orElseThrow(() ->
                         new UnsupportedPaymentException(
-                                "Unsupported payment method: " + paymentMethod
+                                String.format("Unsupported payment method: %s", paymentMethod)
                         )
                 );
 
         // 7. Delegate payment processing to the strategy.
         PaymentProcessingResult result = strategy.process(order);
 
-        // 8. Update order after successful payment.
+        // 8. Update order after successful payment. markPaymentFailed() will also release the reserved quantity of the book.
         if (result.status() == null
-                || result.status() != com.ebookstore.payment.entity.PaymentStatus.SUCCESS) {
-            throw new PaymentProcessException("Payment was not successful");
+                || result.status() != PaymentStatus.SUCCESS) {
+
+            order.markPaymentFailed();
+            order.getItems().forEach(item -> {
+
+                Book book = bookRepository.findByIdForUpdate(item.getBookId())
+                        .orElseThrow(() ->
+                                new PaymentProcessException(
+                                        "Book not found: " + item.getBookId()
+                                )
+                        );
+
+                book.releaseQuantity(item.getQuantity());
+            });
+
+            throw new PaymentProcessException(
+                    "Payment was not successful"
+            );
         }
 
         order.markPaid();
