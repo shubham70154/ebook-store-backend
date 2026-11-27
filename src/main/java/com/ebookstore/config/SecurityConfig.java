@@ -49,7 +49,9 @@ public class SecurityConfig {
                 )
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/register", "/h2-console/**",
+                                "/swagger-ui.html", "/swagger-ui/**",
+                                "/v3/api-docs", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only APIs
