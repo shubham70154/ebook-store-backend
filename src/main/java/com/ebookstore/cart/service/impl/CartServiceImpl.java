@@ -57,6 +57,7 @@ public class CartServiceImpl implements CartService {
 
         cart.addBook(book, request.getQuantity());
 
+        cartRepository.saveAndFlush(cart);
         return cartMapper.toResponseDto(cart);
     }
 
